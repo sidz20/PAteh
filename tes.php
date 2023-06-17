@@ -37,10 +37,9 @@ $data_array =  array(
    [806, 297, 304, 417, 911, 346],
     
 );
-print_r($data_array);
 $jsondata = json_encode($data_array);
 $jsondataa = '{"data":' .$jsondata.'}';
-echo $jsondataa;
+// echo $jsondataa;
 $make_call = callAPI('POST', 'http://127.0.0.1:5000/enose_tea', $jsondataa);
 echo $make_call;
 

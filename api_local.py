@@ -69,38 +69,29 @@ def disp(num):
 @app.route('/enose_tea', methods=['POST'])
 def process_json():
     content_type = request.headers.get('Content-Type')
-    print(content_type)
-    if (content_type == 'application/json'):
+    if content_type == 'application/json':
         json_req = request.json
-        print(json_req)
-        data=[]
+        data = []
         for i in json_req['data']:
             data.append(i)
           
-        #print(data)  
-        df = pd.DataFrame(data, columns = ['MQ3', 'TGS822', 'TGS2602', 'MQ5', 'MQ138', 'TGS2620'])
-
-        print(df)
+        df = pd.DataFrame(data, columns=['MQ3', 'TGS822', 'TGS2602', 'MQ5', 'MQ138', 'TGS2620'])
         features = scaler_teh.transform(df)
-        print(features)
-        hasil = pd.DataFrame(columns = ['Label', 'Score'])
+        hasil = pd.DataFrame(columns=['Label', 'Score'])
+        
         for feat in features:
             feat = np.array([feat])
-            #print(feat)
             teh_Label = getLabel(classifier_teh.predict(feat))
             scr = regressor_teh.predict(feat)
-            #tvc = tvc[0]
-            print(classifier_teh.predict(feat))
-            new_row = {'Label':teh_Label,'Score':scr[0]}
-            print(teh_Label,scr)
-            #new_row = {'Label':seafood_Label}
-            hasil = hasil.append(new_row,ignore_index=True)
-        #json_rep = {'Label':seafood_Label,'tvc':tvc}
+            scr = sinkronisasi_scr(teh_Label, scr)  # Apply sinkronisasi_scr function
+            new_row = {'Label': teh_Label, 'Score': scr[0]}
+            hasil = pd.concat([hasil, pd.DataFrame([new_row])], ignore_index=True)
+        
         json_rep = hasil.to_json(orient='index')
-        print(json_rep)
         return json_rep
     else:
         return 'Content-Type not supported!'
+
   
 # driver function
 if __name__ == '_main_':
