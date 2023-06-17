@@ -10,7 +10,7 @@ function callAPI($method, $url, $data){
        case "PUT":
           curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "PUT");
           if ($data)
-             curl_setopt($curl, CURLOPT_POSTFIELDS, $data);			 					
+             curl_setopt($curl, CURLOPT_POSTFIELDS, $data);                          
           break;
        default:
           if ($data)
@@ -29,22 +29,26 @@ function callAPI($method, $url, $data){
     if(!$result){die("Connection Failure");}
     curl_close($curl);
     return $result;
- }
+}
 
-$data_array =  array(
-   [855, 304, 299, 417, 810, 349],
-   [837, 299, 297, 417, 893, 347],
-   [806, 297, 304, 417, 911, 346],
-    
+$data_array = array(
+    [855, 304, 299, 417, 810, 349],
+    [837, 299, 297, 417, 893, 347],
+    [806, 297, 304, 417, 911, 346],
 );
 $jsondata = json_encode($data_array);
 $jsondataa = '{"data":' .$jsondata.'}';
-// echo $jsondataa;
-$make_call = callAPI('POST', 'http://127.0.0.1:5000/enose_tea', $jsondataa);
-echo $make_call;
 
-#$response = json_decode($make_call, true);
-#$errors   = $response['response']['errors'];
-#$data     = $response['response']['data :'][0];
-#echo $data;
+$make_call = callAPI('POST', 'http://127.0.0.1:5000/enose_tea', $jsondataa);
+
+$response = json_decode($make_call, true);
+foreach ($response as $index => $row) {
+    $label = $row['Label'];
+    $score = $row['Score'];
+
+    // Do something with the label and score
+    echo "Label: $label<br>";
+    echo "Score: $score<br>";
+    echo "<br>";
+}
 ?>
